@@ -242,15 +242,24 @@ Format strings contain “replacement fields” surrounded by curly braces {}. A
 
 The grammar for a replacement field is as follows:
 
-replacement_field ::=  "{" [field_name] " format_spec "}"
-field_name        ::=  arg_name ("." attribute_name | "[" element_index "]")*
-arg_name          ::=  [identifier | digit+]
-attribute_name    ::=  identifier
-element_index     ::=  digit+ | index_string
-index_string      ::=  <any source character except "]"> +
-conversion        ::=  "r" | "s" | "a"
-format_spec       ::=  <described in the next section>
+```python
 
+# [//]:  (replacement_field ::=  "{" [field_name] " format_spec "}")
+
+# [//]:  (field_name        ::=  arg_name &#40;"." attribute_name | "[" element_index "]"&#41;*)
+
+# [//]:  (arg_name          ::=  [identifier | digit+])
+
+# [//]:  (attribute_name    ::=  identifier)
+
+# [//]:  (element_index     ::=  digit+ | index_string)
+
+# [//]:  (index_string      ::=  <any source character except "]"> +)
+
+# [//]:  (conversion        ::=  "r" | "s" | "a")
+
+# [//]:  (format_spec       ::=  <described in the next section>)
+```
 In less formal terms, the replacement field can start with a field_name that specifies the object whose value is to be formatted and inserted into the output instead of the replacement field. The field_name is optionally followed by a conversion field, which is preceded by an exclamation point '!', and a format_spec, which is preceded by a colon ':'. These specify a non-default format for the replacement value.
 
 See also the Format Specification Mini-Language section.
@@ -262,24 +271,24 @@ Changed in version 3.1: The positional argument specifiers can be omitted for st
 Changed in version 3.4: The positional argument specifiers can be omitted for Formatter.
 
 Some simple format string examples:
-
-"First, thou shalt count to {0}"  # References first positional argument
-"Bring me a {}"                   # Implicitly references the first positional argument
-"From {} to {}"                   # Same as "From {0} to {1}"
-"My quest is {name}"              # References keyword argument 'name'
-"Weight in tons {0.weight}"       # 'weight' attribute of first positional arg
-"Units destroyed: {players[0]}"   # First element of keyword argument 'players'.
-
+```python
+# "First, thou shalt count to {0}"  # References first positional argument
+# "Bring me a {}"                   # Implicitly references the first positional argument
+# "From {} to {}"                   # Same as "From {0} to {1}"
+# "My quest is {name}"              # References keyword argument 'name'
+# "Weight in tons {0.weight}"       # 'weight' attribute of first positional arg
+# "Units destroyed: {players[0]}"   # First element of keyword argument 'players'.
+```
 The conversion field causes a type coercion before formatting. Normally, the job of formatting a value is done by the __format__() method of the value itself. However, in some cases it is desirable to force a type to be formatted as a string, overriding its own definition of formatting. By converting the value to a string before calling __format__(), the normal formatting logic is bypassed.
 
 Three conversion flags are currently supported: '!s' which calls str() on the value, '!r' which calls repr() and '!a' which calls ascii().
 
 Some examples:
-
-"Harold's a clever {0!s}"        # Calls str() on the argument first
-"Bring out the holy {name!r}"    # Calls repr() on the argument first
-"More {!a}"                      # Calls ascii() on the argument first
-
+```python
+# "Harold's a clever {0!s}"        # Calls str() on the argument first
+# "Bring out the holy {name!r}"    # Calls repr() on the argument first
+# "More {!a}"                      # Calls ascii() on the argument first
+```
 The format_spec field contains a specification of how the value should be presented, including such details as field width, alignment, padding, decimal precision and so on. Each value type can define its own “formatting mini-language” or interpretation of the format_spec.
 
 Most built-in types support a common formatting mini-language, which is described in the next section.
@@ -296,16 +305,16 @@ Most built-in types implement the following options for format specifications, a
 A general convention is that an empty format specification produces the same result as if you had called str() on the value. A non-empty format specification typically modifies the result.
 
 The general form of a standard format specifier is:
-
-format_spec     ::=  [[fill]align]
-fill            ::=  <any character>
-align           ::=  "<" | ">" | "=" | "^"
-sign            ::=  "+" | "-" | " "
-width           ::=  digit+
-grouping_option ::=  "_" | ","
-precision       ::=  digit+
-type            ::=  "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
-
+```python
+# format_spec     ::=  [[fill]align]
+# fill            ::=  <any character>
+# align           ::=  "<" | ">" | "=" | "^"
+# sign            ::=  "+" | "-" | " "
+# width           ::=  digit+
+# grouping_option ::=  "_" | ","
+# precision       ::=  digit+
+# type            ::=  "b" | "c" | "d" | "e" | "E" | "f" | "F" | "g" | "G" | "n" | "o" | "s" | "x" | "X" | "%"
+```
 If a valid align value is specified, it can be preceded by a fill character that can be any character and defaults to a space if omitted. It is not possible to use a literal curly brace (”{” or “}”) as the fill character in a formatted string literal or when using the str.format() method. However, it is possible to insert a curly brace with a nested replacement field. This limitation doesn’t affect the format() function.
 
 The meaning of the various alignment options is as follows:
@@ -515,129 +524,165 @@ In most of the cases the syntax is similar to the old %-formatting, with the add
 The new format syntax also supports new and different options, shown in the following examples.
 
 Accessing arguments by position:
-
->>> '{0}, {1}, {2}'.format('a', 'b', 'c')
-'a, b, c'
->>> '{}, {}, {}'.format('a', 'b', 'c')  # 3.1+ only
-'a, b, c'
->>> '{2}, {1}, {0}'.format('a', 'b', 'c')
-'c, b, a'
->>> '{2}, {1}, {0}'.format(*'abc')      # unpacking argument sequence
-'c, b, a'
->>> '{0}{1}{0}'.format('abra', 'cad')   # arguments' indices can be repeated
-'abracadabra'
-
+```python
+# >>> '{0}, {1}, {2}'.format('a', 'b', 'c')
+# 'a, b, c'
+# >>> '{}, {}, {}'.format('a', 'b', 'c')  # 3.1+ only
+# 'a, b, c'
+# >>> '{2}, {1}, {0}'.format('a', 'b', 'c')
+# 'c, b, a'
+# >>> '{2}, {1}, {0}'.format(*'abc')      # unpacking argument sequence
+# 'c, b, a'
+# >>> '{0}{1}{0}'.format('abra', 'cad')   # arguments' indices can be repeated
+# 'abracadabra'
+```
 Accessing arguments by name:
 
->>> 'Coordinates: {latitude}, {longitude}'.format(latitude='37.24N', longitude='-115.81W')
-'Coordinates: 37.24N, -115.81W'
->>> coord = {'latitude': '37.24N', 'longitude': '-115.81W'}
->>> 'Coordinates: {latitude}, {longitude}'.format(**coord)
-'Coordinates: 37.24N, -115.81W'
-
+```python
+# >>> 'Coordinates: {latitude}, {longitude}'.format(latitude='37.24N', longitude='-115.81W')
+# 'Coordinates: 37.24N, -115.81W'
+# >>> coord = {'latitude': '37.24N', 'longitude': '-115.81W'}
+# >>> 'Coordinates: {latitude}, {longitude}'.format(**coord)
+# 'Coordinates: 37.24N, -115.81W'
+```
 Accessing arguments’ attributes:
 
->>> c = 3-5j
->>> ('The complex number {0} is formed from the real part {0.real} '
-...  'and the imaginary part {0.image}.').format(c)
-'The complex number (3-5j) is formed from the real part 3.0 and the imaginary part -5.0.'
->>> class Point:
-...     def __init__(self, x, y):
-...         self.x, self.y = x, y
-...     def __str__(self):
-...         return 'Point({self.x}, {self.y})'.format(self=self)
-...
->>> str(Point(4, 2))
-'Point(4, 2)'
-
+```python
+# >>> c = 3-5j
+# >>> ('The complex number {0} is formed from the real part {0.real} '
+# ...  'and the imaginary part {0.image}.').format(c)
+# 'The complex number (3-5j) is formed from the real part 3.0 and the imaginary part -5.0.'
+# >>> class Point:
+# ...     def __init__(self, x, y):
+# ...         self.x, self.y = x, y
+# ...     def __str__(self):
+# ...         return 'Point({self.x}, {self.y})'.format(self=self)
+# ...
+# >>> str(Point(4, 2))
+# 'Point(4, 2)'
+```
 Accessing arguments’ items:
 
->>> coord = (3, 5)
->>> 'X: {0[0]};  Y: {0[1]}'.format(coord)
-'X: 3;  Y: 5'
-
+```python
+# >>> coord = (3, 5)
+# >>> 'X: {0[0]};  Y: {0[1]}'.format(coord)
+# 'X: 3;  Y: 5'
+```
 Replacing %s and %r:
 
->>> "repr() shows quotes: {!r}; str() doesn't: {!s}".format('test1', 'test2')
-"repr() shows quotes: 'test1'; str() doesn't: test2"
-
+```python
+# >>> "repr() shows quotes: {!r}; str() doesn't: {!s}".format('test1', 'test2')
+# "repr() shows quotes: 'test1'; str() doesn't: test2"
+```
 Aligning the text and specifying a width:
 
->>> '{:<30}'.format('left aligned')
-'left aligned                  '
->>> '{:>30}'.format('right aligned')
-'                 right aligned'
->>> '{:^30}'.format('centered')
-'           centered           '
->>> '{:*^30}'.format('centered')  # use '*' as a fill char
-'***********centered***********'
+```python
+# >>> '{:<30}'.format('left aligned')
+# 'left aligned                  '
+# >>> '{:>30}'.format('right aligned')
+# '                 right aligned'
+# >>> '{:^30}'.format('centered')
+# '           centered           '
+# >>> '{:*^30}'.format('centered')  # use '*' as a fill char
+# '***********centered***********'
 
-Replacing %+f, %-f, and % f and specifying a sign:
+# Replacing %+f, %-f, and % f and specifying a sign:
 
->>> '{:+f}; {:+f}'.format(3.14, -3.14)  # show it always
-'+3.140000; -3.140000'
->>> '{: f}; {: f}'.format(3.14, -3.14)  # show a space for positive numbers
-' 3.140000; -3.140000'
->>> '{:-f}; {:-f}'.format(3.14, -3.14)  # show only the minus -- same as '{:f}; {:f}'
-'3.140000; -3.140000'
-
+# >>> '{:+f}; {:+f}'.format(3.14, -3.14)  # show it always
+# '+3.140000; -3.140000'
+# >>> '{: f}; {: f}'.format(3.14, -3.14)  # show a space for positive numbers
+# ' 3.140000; -3.140000'
+# >>> '{:-f}; {:-f}'.format(3.14, -3.14)  # show only the minus -- same as '{:f}; {:f}'
+# '3.140000; -3.140000'
+```
 Replacing %x and %o and converting the value to different bases:
 
->>> # format also supports binary numbers
->>> "int: {0:d};  hex: {0:x};  oct: {0:o};  bin: {0:b}".format(42)
-'int: 42;  hex: 2a;  oct: 52;  bin: 101010'
->>> # with 0x, 0o, or 0b as prefix:
->>> "int: {0:d};  hex: {0:#x};  oct: {0:#o};  bin: {0:#b}".format(42)
-'int: 42;  hex: 0x2a;  oct: 0o52;  bin: 0b101010'
-
+```python
+# >>> # format also supports binary numbers
+# >>> "int: {0:d};  hex: {0:x};  oct: {0:o};  bin: {0:b}".format(42)
+# 'int: 42;  hex: 2a;  oct: 52;  bin: 101010'
+# >>> # with 0x, 0o, or 0b as prefix:
+# >>> "int: {0:d};  hex: {0:#x};  oct: {0:#o};  bin: {0:#b}".format(42)
+# 'int: 42;  hex: 0x2a;  oct: 0o52;  bin: 0b101010'
+```
 Using the comma as a thousand separator:
 
->>> '{:,}'.format(1234567890)
-'1,234,567,890'
-
+```python
+# >>> '{:,}'.format(1234567890)
+# '1,234,567,890'
+```
 Expressing a percentage:
 
->>> points = 19
->>> total = 22
->>> 'Correct answers: {:.2%}'.format(points/total)
-'Correct answers: 86.36%'
-
+```python
+# >>> points = 19
+# >>> total = 22
+# >>> 'Correct answers: {:.2%}'.format(points/total)
+# 'Correct answers: 86.36%'
+```
 Using type-specific formatting:
 
->>> import datetime
->>> d = datetime.datetime(2010, 7, 4, 12, 15, 58)
->>> '{:%Y-%m-%d %H:%M:%S}'.format(d)
-'2010-07-04 12:15:58'
-
+```python
+# >>> import datetime
+# >>> d = datetime.datetime(2010, 7, 4, 12, 15, 58)
+# >>> '{:%Y-%m-%d %H:%M:%S}'.format(d)
+# '2010-07-04 12:15:58'
+```
 Nesting arguments and more complex examples:
 
->>> for align, text in zip('<^>', ['left', 'center', 'right']):
-...     '{0:{fill}{align}16}'.format(text, fill=align, align=align)
-...
-'left<<<<<<<<<<<<'
-'^^^^^center^^^^^'
-'>>>>>>>>>>>right'
->>>
->>> octets = [192, 168, 0, 1]
->>> '{:02X}{:02X}{:02X}{:02X}'.format(*octets)
-'C0A80001'
->>> int(_, 16)
-3232235521
->>>
->>> width = 5
->>> for num in range(5,12): 
-...     for base in 'dXob':
-...         print('{0:{width}{base}}'.format(num, base=base, width=width), end=' ')
-...     print()
-...
-    5     5     5   101
-    6     6     6   110
-    7     7     7   111
-    8     8    10  1000
-    9     9    11  1001
-   10     A    12  1010
-   11     B    13  1011
+```python
 
+# [//]: # (>>> for align, text in zip&#40;'<^>', ['left', 'center', 'right']&#41;:)
+
+# [//]: # (...     '{0:{fill}{align}16}'.format&#40;text, fill=align, align=align&#41;)
+
+# [//]: # (...)
+
+# [//]: # ('left<<<<<<<<<<<<')
+
+# [//]: # ('^^^^^center^^^^^')
+
+# [//]: # ('>>>>>>>>>>>right')
+
+# [//]: # (>>>)
+
+# [//]: # (>>> octets = [192, 168, 0, 1])
+
+# [//]: # (>>> '{:02X}{:02X}{:02X}{:02X}'.format&#40;*octets&#41;)
+
+# [//]: # ('C0A80001')
+
+# [//]: # (>>> int&#40;_, 16&#41;)
+
+# [//]: # (3232235521)
+
+# [//]: # (>>>)
+
+# [//]: # (>>> width = 5)
+
+# [//]: # (>>> for num in range&#40;5,12&#41;: )
+
+# [//]: # (...     for base in 'dXob':)
+
+# [//]: # (...         print&#40;'{0:{width}{base}}'.format&#40;num, base=base, width=width&#41;, end=' '&#41;)
+
+# [//]: # (...     print&#40;&#41;)
+
+# [//]: # (...)
+
+# [//]: # (    5     5     5   101)
+
+# [//]: # (    6     6     6   110)
+
+# [//]: # (    7     7     7   111)
+
+# [//]: # (    8     8    10  1000)
+
+# [//]: # (    9     9    11  1001)
+
+# [//]: # (   10     A    12  1010)
+
+# [//]: # (   11     B    13  1011)
+```
 Template strings
 
 Template strings provide simpler string substitutions as described in PEP 292. A primary use case for template strings is for internationalization (i18n) since in that context, the simpler syntax and functionality makes it easier to translate than other built-in string formatting facilities in Python. As an example of a library built on template strings for i18n, see the fluff.i18n package.
@@ -674,22 +719,23 @@ class string.Template(template)
 
 Here is an example of how to use a Template:
 
->>> from string import Template
->>> s = Template('$who likes $what')
->>> s.substitute(who='tim', what='kung pao')
-'tim likes kung pao'
->>> d = dict(who='tim')
->>> Template('Give $who $100').substitute(d)
-Traceback (most recent call last):
-...
-ValueError: Invalid placeholder in string: line 1, col 11
->>> Template('$who likes $what').substitute(d)
-Traceback (most recent call last):
-...
-KeyError: 'what'
->>> Template('$who likes $what').safe_substitute(d)
-'tim likes $what'
-
+```python
+# >>> from string import Template
+# >>> s = Template('$who likes $what')
+# >>> s.substitute(who='tim', what='kung pao')
+# 'tim likes kung pao'
+# >>> d = dict(who='tim')
+# >>> Template('Give $who $100').substitute(d)
+# Traceback (most recent call last):
+# ...
+# ValueError: Invalid placeholder in string: line 1, col 11
+# >>> Template('$who likes $what').substitute(d)
+# Traceback (most recent call last):
+# ...
+# KeyError: 'what'
+# >>> Template('$who likes $what').safe_substitute(d)
+# 'tim likes $what'
+```
 Advanced usage: you can derive subclasses of Template to customize the placeholder syntax, delimiter character, or the entire regular expression used to parse template strings. To do this, you can override these class attributes:
 
     delimiter – This is the literal string describing a placeholder introducing delimiter. The default value is $. Note that this should not be a regular expression, as the implementation will call re.escape() on this string as needed. Note further that you cannot change the delimiter after class creation (i.e. a different delimiter must be set in the subclass’s class namespace).
